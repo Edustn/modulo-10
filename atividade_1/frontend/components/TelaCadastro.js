@@ -2,22 +2,16 @@ import '../global.css'
 import { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+// import TelaCadastro from './components/TelaCadastro';
 
-export default function TelaLogin() {
+
+export default function TelaCadastro() {
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
 
-    const handleLogin = () => {
-        console.log('Email:', email);
-        console.log('Senha:', senha);
-        Alert.alert('Login enviado', `Email: ${email}\nSenha: ${senha}`);
-        // Aqui você pode fazer uma requisição para o back-end
-    };
-
     return (
         <SafeAreaView className="flex-1 justify-center items-center bg-white px-6">
-            <Text className="text-2xl font-bold mb-8">Login</Text>
-
+            <Text className="font-bold text-2xl mb-8"> Cadastro</Text>
             <TextInput
                 placeholder="Email"
                 placeholderTextColor="gray_text"
@@ -25,38 +19,21 @@ export default function TelaLogin() {
                 onChangeText={setEmail}
                 keyboardType="email-address"
                 autoCapitalize="none"
-                className="w-full border border-gray-300 rounded-xl p-4 mb-4"
-            />
+                className="w-full border border-gray-300 rounded-xl p-4 mb-4" />
 
             <TextInput
                 placeholder="Senha"
                 placeholderTextColor="gray_text"
-                value={senha}
+                value={email}
                 onChangeText={setSenha}
                 secureTextEntry
-                className="w-full border border-gray-300 rounded-xl p-4 mb-6"
-            />
-            <View className="w-full flex-row justify-end space-x-2">
-                <TouchableOpacity
-                    onPress={handleLogin}
-                    className="py-1 px-2 rounded-xl mb-1 "
-                >
-                    <Text className="text-gray_text text-center font-bold text-sm">Cadastro</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                    onPress={handleLogin}
-                    className="py-1 px-2 rounded-xl mb-1"
-                >
-                    <Text className="text-gray_text text-center font-bold text-sm">Esqueci a senha</Text>
-                </TouchableOpacity>
-            </View>
+                className="w-full border border-gray-300 rounded-xl p-4 mb-4" />
 
             <TouchableOpacity
-                onPress={handleLogin}
+                // onPress={handleLogin}
                 className="w-full bg-blue-600 py-4 rounded-xl"
             >
-                <Text className="text-white text-center font-bold text-lg">Entrar</Text>
+                <Text className="text-white text-center font-bold text-lg">Cadastrar</Text>
             </TouchableOpacity>
 
         </SafeAreaView>

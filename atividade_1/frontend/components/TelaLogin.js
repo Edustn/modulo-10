@@ -2,8 +2,12 @@ import '../global.css'
 import { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
+
 
 export default function TelaLogin() {
+    const navigation = useNavigation();
+
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
 
@@ -38,7 +42,7 @@ export default function TelaLogin() {
             />
             <View className="w-full flex-row justify-end space-x-2">
                 <TouchableOpacity
-                    onPress={handleLogin}
+                    onPress={() => navigation.navigate('TelaCadastro')}
                     className="py-1 px-2 rounded-xl mb-1 "
                 >
                     <Text className="text-gray_text text-center font-bold text-sm">Cadastro</Text>
