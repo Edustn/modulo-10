@@ -49,7 +49,7 @@ export default function TelaLogin() {
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                    onPress={handleLogin}
+                    onPress={() => navigation.navigate('TelaSolicacaoEmail')}
                     className="py-1 px-2 rounded-xl mb-1"
                 >
                     <Text className="text-gray_text text-center font-bold text-sm">Esqueci a senha</Text>
