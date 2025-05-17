@@ -40,6 +40,14 @@ export default function TelaLogin() {
                 secureTextEntry
                 className="w-full border border-gray-300 rounded-xl p-4 mb-6"
             />
+
+            <TouchableOpacity
+                onPress={handleLogin}
+                className="w-full bg-blue-600 py-4 rounded-xl"
+            >
+                <Text className="text-white text-center font-bold text-lg">Entrar</Text>
+            </TouchableOpacity>
+           
             <View className="w-full flex-row justify-end space-x-2">
                 <TouchableOpacity
                     onPress={() => navigation.navigate('TelaCadastro')}
@@ -55,13 +63,6 @@ export default function TelaLogin() {
                     <Text className="text-gray_text text-center font-bold text-sm">Esqueci a senha</Text>
                 </TouchableOpacity>
             </View>
-
-            <TouchableOpacity
-                onPress={handleLogin}
-                className="w-full bg-blue-600 py-4 rounded-xl"
-            >
-                <Text className="text-white text-center font-bold text-lg">Entrar</Text>
-            </TouchableOpacity>
 
         </SafeAreaView>
     );

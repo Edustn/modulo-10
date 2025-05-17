@@ -8,14 +8,14 @@ export default function VerificarOTP({ navigation, route }) {
   const email = route.params.email;
 
   const handleVerificar = async () => {
-    const response = await fetch('http://SEU_BACKEND/verify-otp', {
+    const response = await fetch('http://10.128.0.79:8000/verify-otp', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, otp }),
     });
 
     if (response.ok) {
-      navigation.navigate('NovaSenha', { email });
+      navigation.navigate('TelaRedTelaRedfinirSenha', { email });
     } else {
       Alert.alert('Erro', 'Código inválido.');
     }

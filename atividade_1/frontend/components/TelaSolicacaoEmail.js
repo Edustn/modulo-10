@@ -9,7 +9,7 @@ export default function EsqueciSenha({ navigation }) {
   const handleEnviarOTP = async () => {
     try {
       // Envia e-mail para o backend
-      const response = await fetch('http://192.168.0.255:8000/send-otp', {
+      const response = await fetch('http://10.128.0.79:8000/send-otp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
@@ -17,7 +17,7 @@ export default function EsqueciSenha({ navigation }) {
 
       if (response.ok) {
         Alert.alert('Código enviado!', 'Verifique seu e-mail.');
-        navigation.navigate('VerificarOTP', { email });
+        navigation.navigate('TelaValidacao', { email });
       } else {
         Alert.alert('Erro', 'Não foi possível enviar o código.');
       }
