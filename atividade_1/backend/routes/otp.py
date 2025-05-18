@@ -6,7 +6,11 @@ from fastapi import HTTPException
 from pydantic import BaseModel
 import smtplib
 from email.message import EmailMessage
+from dotenv import load_dotenv
+import os
 
+
+load_dotenv()  
 
 class EmailModel(BaseModel):
     email: str
@@ -25,15 +29,22 @@ class OPT:
         self.otp_storage = {}
 
     def send_otp(self, data: EmailModel):
-        corpo_email = """
-                         <p>Olá, seu código é:</p>
+
+        otp = str(random.randint(100000, 999999))
+        self.otp_storage[data.email] = {"otp": otp, "expires": time.time() + 300}
+        print(f"Enviar este código para {data.email}: {otp}")
+
+
+
+        corpo_email = f"""
+                         <p>Olá, seu código é: {otp}</p>
                       """
 
         msg = EmailMessage()
         msg['Subject'] = "Assunto"
-        msg['From'] = 'pythonimpressionador@gmail.com'
-        msg['To'] = 'pythonimpressionador@gmail.com'
-        password = 'xwvurpdzdozjpmsm'
+        msg['From'] = os.getenv('EMAIL')
+        msg['To'] = f'{data.email}'
+        password = os.getenv('SENHA')
         msg.set_content(corpo_email, subtype='html')
 
         with smtplib.SMTP('smtp.gmail.com', 587) as s:
@@ -45,10 +56,6 @@ class OPT:
 
 
 
-
-        otp = str(random.randint(100000, 999999))
-        self.otp_storage[data.email] = {"otp": otp, "expires": time.time() + 300}
-        print(f"Enviar este código para {data.email}: {otp}")
         return {"msg": "Código enviado"}
 
     def verify_otp(self, data: OTPModel):
