@@ -7,6 +7,7 @@ import TelaCadastro from '../components/TelaCadastro';
 import TelaSolicacaoEmail from '../components/TelaSolicacaoEmail';
 import TelaValidacao from '../components/TelaValidacao';
 import TelaRedTelaRedfinirSenha from '../components/TelaRedfinirSenha';
+import TelaPrincipal from '../components/TelaPrincipal';
 
 const Stack = createNativeStackNavigator();
 
@@ -19,6 +20,7 @@ export default function AppNavigator() {
                 <Stack.Screen name="TelaSolicacaoEmail" component={TelaSolicacaoEmail} />
                 <Stack.Screen name="TelaValidacao" component={TelaValidacao} />
                 <Stack.Screen name="TelaRedTelaRedfinirSenha" component={TelaRedTelaRedfinirSenha} />
+                <Stack.Screen name="TelaPrincipal" component={TelaPrincipal} />
             </Stack.Navigator>
         </NavigationContainer>
     );

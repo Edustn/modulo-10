@@ -9,7 +9,7 @@ export default function EsqueciSenha({ navigation }) {
   const handleEnviarOTP = async () => {
     try {
       // Envia e-mail para o backend
-      const response = await fetch('http://10.128.0.79:8000/send-otp', {
+      const response = await fetch('http://192.168.0.9:8000/send-otp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),

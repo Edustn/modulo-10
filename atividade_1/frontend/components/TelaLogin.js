@@ -14,7 +14,14 @@ export default function TelaLogin() {
     const handleLogin = () => {
         console.log('Email:', email);
         console.log('Senha:', senha);
-        Alert.alert('Login enviado', `Email: ${email}\nSenha: ${senha}`);
+        if (email == "teste" && senha == '1234') {
+            navigation.navigate('TelaPrincipal')
+        }
+        else {
+            Alert.alert('Login ou senha incorretos');
+            
+        }
+        // Alert.alert('Login enviado', `Email: ${email}\nSenha: ${senha}`);
         // Aqui você pode fazer uma requisição para o back-end
     };
 
@@ -47,7 +54,7 @@ export default function TelaLogin() {
             >
                 <Text className="text-white text-center font-bold text-lg">Entrar</Text>
             </TouchableOpacity>
-           
+
             <View className="w-full flex-row justify-end space-x-2">
                 <TouchableOpacity
                     onPress={() => navigation.navigate('TelaCadastro')}
