@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, FlatList, Text, ActivityIndicator, StyleSheet, Image } from 'react-native';
+import UserHeader from './Header';
 
 const PAGE_SIZE = 100;
 
@@ -37,6 +38,7 @@ const App = () => {
 
   return (
     <View style={styles.container}>
+      <UserHeader> </UserHeader>
       <FlatList
         data={items}
         keyExtractor={item => item.id.toString()}
