@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { View, FlatList, Text, ActivityIndicator, StyleSheet, Image } from 'react-native';
+import { View, FlatList, Text, ActivityIndicator, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import UserHeader from './Header';
+import CameraScreen from './CameraScreen';
 
 const PAGE_SIZE = 100;
 
 const App = () => {
+  const navigation = useNavigation();
+
   const [items, setItems] = useState([]);
   const [skip, setSkip] = useState(0);
   const [loadingMore, setLoadingMore] = useState(false);
@@ -58,6 +62,14 @@ const App = () => {
         onEndReachedThreshold={0.5}
         ListFooterComponent={loadingMore ? <ActivityIndicator size="large" /> : null}
       />
+
+      <TouchableOpacity
+        className="bg-blue-600 px-6 py-3 rounded-lg"
+        onPress={() => navigation.navigate('CameraScreen')}
+      >
+        <Text className="text-white font-bold text-lg">Abrir Câmera</Text>
+      </TouchableOpacity>
+
     </View>
   );
 };

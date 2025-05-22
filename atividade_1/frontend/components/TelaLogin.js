@@ -14,7 +14,7 @@ export default function TelaLogin() {
     const handleLogin = () => {
         console.log('Email:', email);
         console.log('Senha:', senha);
-        if (email == "teste" && senha == '1234') {
+        if (email == "teste@gmail.com" && senha == '1234') {
             navigation.navigate('TelaPrincipal')
         }
         else {

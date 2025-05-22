@@ -2,13 +2,15 @@
 import { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import ip_address from '../utils/ip_address';
+
 
 export default function VerificarOTP({ navigation, route }) {
   const [otp, setOtp] = useState('');
   const email = route.params.email;
 
   const handleVerificar = async () => {
-    const response = await fetch('http://192.168.0.9:8000/verify-otp', {
+    const response = await fetch(`http://${ip_address}:8000/verify-otp`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, otp }),

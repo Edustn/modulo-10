@@ -2,6 +2,11 @@
   "expo": {
     "name": "atividade_1",
     "slug": "atividade_1",
+    "permissions": [
+      "CAMERA",
+      "WRITE_EXTERNAL_STORAGE",
+      "READ_EXTERNAL_STORAGE"
+    ],
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -25,7 +30,6 @@
     "web": {
       "favicon": "./assets/favicon.png",
       "bundler": "metro"
-
     }
   }
 }

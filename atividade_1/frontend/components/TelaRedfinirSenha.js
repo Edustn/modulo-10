@@ -2,13 +2,16 @@
 import { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import ip_address from '../utils/ip_address';
+
 
 export default function NovaSenha({ route }) {
   const [senha, setSenha] = useState('');
   const email = route.params.email;
 
   const handleRedefinir = async () => {
-    const response = await fetch('http://192.168.0.9:8000/reset-password', {
+    // const ip = ip_address
+    const response = await fetch(`http://${ip_address}:8000/reset-password`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, senha }),
