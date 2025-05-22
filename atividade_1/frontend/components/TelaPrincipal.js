@@ -2,7 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { View, FlatList, Text, ActivityIndicator, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import UserHeader from './Header';
-import CameraScreen from './CameraScreen';
+import * as ImagePicker from 'expo-image-picker';
+import { Ionicons } from '@expo/vector-icons';
+import { Alert } from 'react-native';
+
 
 const PAGE_SIZE = 100;
 
@@ -40,7 +43,47 @@ const App = () => {
     fetchItems(); // Primeira carga
   }, []);
 
+  const abrirCamera = async () => {
+    const { status } = await ImagePicker.requestCameraPermissionsAsync();
+    if (status !== 'granted') {
+      Alert.alert('Permissão necessária', 'Permissão para acessar a câmera negada.');
+      return;
+    }
+
+    const resultado = await ImagePicker.launchCameraAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 0.8,
+    });
+
+    if (!resultado.canceled) {
+      Alert.alert('Sucesso', 'Foto tirada com sucesso!');
+    }
+  };
+
+  const abrirGaleria = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== 'granted') {
+      Alert.alert('Permissão necessária', 'Permissão para acessar a galeria negada.');
+      return;
+    }
+
+    const resultado = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 0.8,
+    });
+
+    if (!resultado.canceled) {
+      Alert.alert('Sucesso', 'Imagem selecionada da galeria!');
+    }
+  };
+
+
   return (
+
     <View style={styles.container}>
       <UserHeader> </UserHeader>
       <FlatList
@@ -63,14 +106,32 @@ const App = () => {
         ListFooterComponent={loadingMore ? <ActivityIndicator size="large" /> : null}
       />
 
-      <TouchableOpacity
-        className="bg-blue-600 px-6 py-3 rounded-lg"
+      {/* <TouchableOpacity
         onPress={() => navigation.navigate('CameraScreen')}
+        className="absolute bottom-6 right-6 bg-blue-600 w-16 h-16 rounded-full items-center justify-center shadow-md"
       >
-        <Text className="text-white font-bold text-lg">Abrir Câmera</Text>
-      </TouchableOpacity>
+        <Text className="text-white text-xl font-bold">📷</Text>
+      </TouchableOpacity> */}
+
+      <View style={{ position: 'absolute', bottom: 20, right: 20, alignItems: 'center', gap: 16 }}>
+        <TouchableOpacity
+          style={{ width: 56, height: 56, borderRadius: 28, backgroundColor: '#9333ea', justifyContent: 'center', alignItems: 'center', elevation: 5 }}
+          onPress={abrirGaleria}
+        >
+          <Ionicons name="images" size={24} color="white" />
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={{ width: 56, height: 56, borderRadius: 28, backgroundColor: '#2563eb', justifyContent: 'center', alignItems: 'center', elevation: 5 }}
+          onPress={abrirCamera}
+        >
+          <Ionicons name="camera" size={28} color="white" />
+        </TouchableOpacity>
+      </View>
+
 
     </View>
+
   );
 };
 
