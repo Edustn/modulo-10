@@ -13,6 +13,8 @@ const App = () => {
   const navigation = useNavigation();
 
   const [items, setItems] = useState([]);
+  const [expandedItems, setExpandedItems] = useState({});
+
   const [skip, setSkip] = useState(0);
   const [loadingMore, setLoadingMore] = useState(false);
   const [hasMore, setHasMore] = useState(true);
@@ -76,11 +78,21 @@ const App = () => {
       quality: 0.8,
     });
 
+
+
+
     if (!resultado.canceled) {
       Alert.alert('Sucesso', 'Imagem selecionada da galeria!');
     }
   };
 
+
+  const toggleItem = (id) => {
+    setExpandedItems(prev => ({
+      ...prev,
+      [id]: !prev[id]
+    }));
+  }; 
 
   return (
 
@@ -89,17 +101,24 @@ const App = () => {
       <FlatList
         data={items}
         keyExtractor={item => item.id.toString()}
+
         renderItem={({ item }) => (
-          <View style={styles.card}>
-            <Text style={styles.title}>{item.title}</Text>
-            <Image
-              source={{ uri: item.thumbnail }}
-              style={styles.image}
-              resizeMode="cover"
-            />
-            <Text>{item.description}</Text>
-            <Text style={styles.price}>${item.price}</Text>
-          </View>
+          <TouchableOpacity onPress={() => toggleItem(item.id)}>
+            <View style={styles.card}>
+              <Image
+                source={{ uri: item.thumbnail }}
+                style={styles.image}
+                resizeMode="cover"
+              />
+              {expandedItems[item.id] && (
+                <>
+                  <Text style={styles.title}>{item.title}</Text>
+                  <Text>{item.description}</Text>
+                  <Text style={styles.price}>${item.price}</Text>
+                </>
+              )}
+            </View>
+          </TouchableOpacity>
         )}
         onEndReached={fetchItems}
         onEndReachedThreshold={0.5}
