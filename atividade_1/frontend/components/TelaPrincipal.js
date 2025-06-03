@@ -12,6 +12,7 @@ const PAGE_SIZE = 100;
 const App = () => {
   const navigation = useNavigation();
 
+  
   const [items, setItems] = useState([]);
   const [expandedItems, setExpandedItems] = useState({});
 
@@ -65,7 +66,6 @@ const App = () => {
       Alert.alert('Sucesso', 'Foto tirada com sucesso!');
     }
   };
-
   const abrirGaleria = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== 'granted') {
@@ -80,13 +80,23 @@ const App = () => {
       quality: 0.8,
     });
 
-
-
-
     if (!resultado.canceled) {
       Alert.alert('Sucesso', 'Imagem selecionada da galeria!');
+
+      // Criar um novo item com dados fictícios e a imagem escolhida
+      const novoItem = {
+        id: Date.now(), // id único
+        title: 'Produto da Galeria',
+        description: 'Este produto foi adicionado a partir da galeria.',
+        price: 0,
+        thumbnail: resultado.assets[0].uri,
+      };
+
+      // Adiciona o novo item no topo da lista
+      setItems(prevItems => [novoItem, ...prevItems]);
     }
   };
+
 
 
   const toggleItem = (id) => {
