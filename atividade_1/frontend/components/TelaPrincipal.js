@@ -5,6 +5,7 @@ import UserHeader from './Header';
 import * as ImagePicker from 'expo-image-picker';
 import { Ionicons } from '@expo/vector-icons';
 import { Alert } from 'react-native';
+import { TextInput } from 'react-native';
 
 
 const PAGE_SIZE = 100;
@@ -12,7 +13,12 @@ const PAGE_SIZE = 100;
 const App = () => {
   const navigation = useNavigation();
 
-  
+  const [modalVisivel, setModalVisivel] = useState(false);
+  const [descricaoImagem, setDescricaoImagem] = useState('');
+  const [imagemSelecionada, setImagemSelecionada] = useState(null);
+  const [precoImagem, setPrecoImagem] = useState('');
+
+
   const [items, setItems] = useState([]);
   const [expandedItems, setExpandedItems] = useState({});
 
@@ -66,6 +72,8 @@ const App = () => {
       Alert.alert('Sucesso', 'Foto tirada com sucesso!');
     }
   };
+
+
   const abrirGaleria = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== 'granted') {
@@ -81,21 +89,11 @@ const App = () => {
     });
 
     if (!resultado.canceled) {
-      Alert.alert('Sucesso', 'Imagem selecionada da galeria!');
-
-      // Criar um novo item com dados fictícios e a imagem escolhida
-      const novoItem = {
-        id: Date.now(), // id único
-        title: 'Produto da Galeria',
-        description: 'Este produto foi adicionado a partir da galeria.',
-        price: 0,
-        thumbnail: resultado.assets[0].uri,
-      };
-
-      // Adiciona o novo item no topo da lista
-      setItems(prevItems => [novoItem, ...prevItems]);
+      setImagemSelecionada(resultado.assets[0].uri);
+      setModalVisivel(true); // Abre o modal para digitar a descrição
     }
   };
+
 
 
 
@@ -105,6 +103,32 @@ const App = () => {
       [id]: !prev[id]
     }));
   };
+
+
+  const adicionarItemComDescricao = () => {
+    if (!descricaoImagem.trim() || !precoImagem.trim()) {
+      Alert.alert('Erro', 'Por favor, preencha a descrição e o preço.');
+      return;
+    }
+
+    const novoItem = {
+      id: Date.now(),
+      title: 'Produto da Galeria',
+      description: descricaoImagem,
+      price: parseFloat(precoImagem),
+      thumbnail: imagemSelecionada,
+    };
+
+    setItems(prevItems => [novoItem, ...prevItems]);
+    setDescricaoImagem('');
+    setPrecoImagem('');
+    setImagemSelecionada(null);
+    setModalVisivel(false);
+
+    Alert.alert('Sucesso', 'Imagem adicionada com sucesso!');
+  };
+
+
 
   return (
 
@@ -160,6 +184,38 @@ const App = () => {
         </TouchableOpacity>
       </View>
 
+      {modalVisivel && (
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContainer}>
+            <Text style={{ marginBottom: 10, fontWeight: 'bold' }}>Descrição da imagem:</Text>
+            <TextInput
+              value={descricaoImagem}
+              onChangeText={setDescricaoImagem}
+              placeholder="Digite uma descrição"
+              style={styles.input}
+            />
+
+            <Text style={{ marginTop: 10, marginBottom: 5, fontWeight: 'bold' }}>Preço:</Text>
+            <TextInput
+              value={precoImagem}
+              onChangeText={setPrecoImagem}
+              placeholder="Digite o valor (ex: 99.90)"
+              keyboardType="numeric"
+              style={styles.input}
+            />
+
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 10 }}>
+              <TouchableOpacity onPress={() => setModalVisivel(false)}>
+                <Text style={{ color: 'red' }}>Cancelar</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={adicionarItemComDescricao}>
+                <Text style={{ color: 'green' }}>Adicionar</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      )}
+
 
     </View>
 
@@ -180,5 +236,29 @@ const styles = StyleSheet.create({
   },
   title: { fontSize: 16, fontWeight: 'bold', marginBottom: 8 },
   image: { width: '100%', height: 200, borderRadius: 6, marginBottom: 10 },
-  price: { fontWeight: 'bold', marginTop: 6, color: '#2b8a3e' },
+  price: { fontWeight: 'bold', marginTop: 6, color: '#2b8a3e' }, modalOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  modalContainer: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 8,
+    width: '100%',
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 4,
+    padding: 8,
+  },
+
+
 });
