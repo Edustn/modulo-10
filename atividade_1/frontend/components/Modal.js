@@ -3,13 +3,13 @@ import React, { useState } from 'react';
 import { Modal, View, Text, TextInput, TouchableOpacity } from 'react-native';
 
 const UserProfileModal = ({ visible, onClose }) => {
-  const [email, setEmail] = useState('usuario@email.com');
-  const [senha, setSenha] = useState('123456');
+  const [email, setEmail] = useState('teste@gmail.com');
+  const [nome, setNome] = useState('Teste');
 
   const handleSave = () => {
     // Lógica de salvar (ex: API ou Context)
     console.log('Novo e-mail:', email);
-    console.log('Nova senha:', senha);
+    console.log('Nova nome:', nome);
     onClose();
   };
 
@@ -20,18 +20,18 @@ const UserProfileModal = ({ visible, onClose }) => {
           <Text className="text-lg font-bold mb-3">Meu Perfil</Text>
 
           <TextInput
+            className="border border-gray-300 rounded-lg px-3 py-2 mb-4"
+            placeholder="Teste"
+            value={nome}
+            onChangeText={setNome}
+          />
+
+          <TextInput
             className="border border-gray-300 rounded-lg px-3 py-2 mb-3"
             placeholder="E-mail"
             value={email}
             onChangeText={setEmail}
           />
-          {/* <TextInput
-            className="border border-gray-300 rounded-lg px-3 py-2 mb-4"
-            placeholder="Senha"
-            secureTextEntry
-            value={senha}
-            onChangeText={setSenha}
-          /> */}
 
           <View className="flex-row justify-between">
             <TouchableOpacity

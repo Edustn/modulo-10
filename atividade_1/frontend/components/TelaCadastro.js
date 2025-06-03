@@ -8,10 +8,18 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 export default function TelaCadastro() {
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
+    const [nome, setNome] = useState('');
 
     return (
         <SafeAreaView className="flex-1 justify-center items-center bg-white px-6">
             <Text className="font-bold text-2xl mb-8"> Cadastro</Text>
+            <TextInput
+                placeholder="Nome"
+                placeholderTextColor="gray_text"
+                value={email}
+                onChangeText={setNome}
+                className="w-full border border-gray-300 rounded-xl p-4 mb-4" />
+            
             <TextInput
                 placeholder="Email"
                 placeholderTextColor="gray_text"
