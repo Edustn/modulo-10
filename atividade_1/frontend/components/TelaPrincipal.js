@@ -43,6 +43,8 @@ const App = () => {
 
   useEffect(() => {
     fetchItems(); // Primeira carga
+    Alert.alert('Bem-vindo!', 'Estamos felizes em te ver aqui novamente 😊');
+
   }, []);
 
   const abrirCamera = async () => {
@@ -92,7 +94,7 @@ const App = () => {
       ...prev,
       [id]: !prev[id]
     }));
-  }; 
+  };
 
   return (
 
