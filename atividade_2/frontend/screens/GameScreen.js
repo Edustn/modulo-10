@@ -7,8 +7,8 @@ import { categorias } from '../data/animalsList';
 
 function shuffleArray(array) {
   return array
-    .concat(array)
-    .sort(() => Math.random() - 0.5)
+    .concat(array) // duplica os pares
+    .sort(() => Math.random() - 0.5) // embaralha
     .map((item, index) => ({
       id: index,
       content: item,
@@ -21,19 +21,22 @@ export default function GameScreen() {
   const route = useRoute();
   const navigation = useNavigation();
 
+  // Recebe categoria e jogador (jogador é um objeto {id, nome, pontuacao})
   const { categoria, jogador } = route.params;
+
   const emojis = categorias[categoria];
 
   const [cards, setCards] = useState(shuffleArray(emojis));
   const [flippedCards, setFlippedCards] = useState([]);
   const [pontuacao, setPontuacao] = useState(0);
 
-  // Verificar combinação
+  // Verificar combinação de cartas
   useEffect(() => {
     if (flippedCards.length === 2) {
       const [first, second] = flippedCards;
 
       if (first.content === second.content) {
+        // Acertou o par
         setCards(prev =>
           prev.map(card =>
             card.id === first.id || card.id === second.id
@@ -43,7 +46,7 @@ export default function GameScreen() {
         );
         setPontuacao(prev => prev + 10); // Acerto +10
       } else {
-        setPontuacao(prev => prev - 1); // Erro -1
+        setPontuacao(prev => (prev > 0 ? prev - 1 : 0)); // Erro -1 (não deixa negativo)
       }
 
       setTimeout(() => {
@@ -77,7 +80,7 @@ export default function GameScreen() {
     setFlippedCards(prev => [...prev, flipped]);
   };
 
-  // Enviar pontuação para o backend
+  // Atualizar pontuação no backend
   const atualizarPontuacaoNoBackend = async () => {
     try {
       await fetch(`http://${ip_address}:8000/atualizar_pontuacao`, {
@@ -86,7 +89,7 @@ export default function GameScreen() {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          nome: jogador,
+          nome: jogador.nome,
           pontuacao: pontuacao
         })
       });
@@ -109,7 +112,7 @@ export default function GameScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>🧠 Jogo da Memória</Text>
-      <Text style={styles.subtitle}>Jogador: {jogador}</Text>
+      <Text style={styles.subtitle}>Jogador: {jogador.nome}</Text>
       <Text style={styles.score}>Pontuação: {pontuacao}</Text>
 
       <View style={styles.centeredContent}>
@@ -138,30 +141,20 @@ export default function GameScreen() {
 }
 
 
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fdfada',
     alignItems: 'center',
-    justifyContent: 'flex-start',
+    justifyContent: 'flex-start', // deixa espaço para o título no topo
     paddingTop: 60,
   },
   title: {
     fontSize: 28,
     fontWeight: 'bold',
-    marginBottom: 4,
+    marginBottom: 20,
     color: '#444',
-  },
-  subtitle: {
-    fontSize: 18,
-    marginBottom: 8,
-    color: '#666'
-  },
-  score: {
-    fontSize: 20,
-    marginBottom: 16,
-    color: '#2563eb',
-    fontWeight: 'bold'
   },
   flatListContent: {
     flexGrow: 1,

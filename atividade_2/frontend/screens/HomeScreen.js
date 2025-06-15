@@ -2,14 +2,39 @@ import { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
+import ip_address from '../utils/ip_address';
 
 export default function HomeScreen() {
     const navigation = useNavigation();
-
     const [usuario, setUsuario] = useState('');
 
-    const handleLogin = () => {
+    const handleLogin = async () => {
+        if (!usuario.trim()) {
+            Alert.alert('Erro', 'Por favor, insira um nome de usuário.');
+            return;
+        }
 
+        try {
+            const response = await fetch(`http://${ip_address}:8000/jogador`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ nome: usuario })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                // Navega para a tela de seleção de animais
+                navigation.navigate('AnimalsScreen', { jogador: data });
+            } else {
+                Alert.alert('Erro', data.detail || 'Erro ao criar jogador.');
+            }
+        } catch (error) {
+            console.error(error);
+            Alert.alert('Erro', 'Não foi possível conectar ao servidor.');
+        }
     };
 
     return (
@@ -21,15 +46,12 @@ export default function HomeScreen() {
                 placeholderTextColor="#6b7280"
                 value={usuario}
                 onChangeText={setUsuario}
-                // keyboardType="email-address"
                 autoCapitalize="none"
                 style={styles.input}
             />
 
-
-
             <TouchableOpacity
-                onPress={() => navigation.navigate('AnimalsScreen')}
+                onPress={handleLogin}
                 style={styles.botaoPrincipal}
             >
                 <Text style={styles.textoBotao}>Entrar</Text>
@@ -89,22 +111,5 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontWeight: 'bold',
         fontSize: 18
-    },
-    linksContainer: {
-        width: '100%',
-        flexDirection: 'row',
-        justifyContent: 'flex-end',
-        gap: 8,
-        marginTop: 8
-    },
-    botaoLink: {
-        paddingVertical: 4,
-        paddingHorizontal: 8
-    },
-    textoLink: {
-        color: '#6b7280',
-        textAlign: 'center',
-        fontWeight: 'bold',
-        fontSize: 14
     }
 });
