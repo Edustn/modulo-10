@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, FlatList, Alert } from 'react-native';
+import { useRoute, useNavigation } from '@react-navigation/native';
+import ip_address from '../utils/ip_address';
 
-// Cartas base (você pode usar emojis ou imagens)
-const baseCards = ['🐶', '🐱', '🦊', '🐼', '🐸', '🦁', '🐵', '🐷'];
+import { categorias } from '../data/animalsList';
 
 function shuffleArray(array) {
   return array
-    .concat(array) // duplica os pares
-    .sort(() => Math.random() - 0.5) // embaralha
+    .concat(array)
+    .sort(() => Math.random() - 0.5)
     .map((item, index) => ({
       id: index,
       content: item,
@@ -16,10 +17,18 @@ function shuffleArray(array) {
     }));
 }
 
-export default function App() {
-  const [cards, setCards] = useState(shuffleArray(baseCards));
-  const [flippedCards, setFlippedCards] = useState([]);
+export default function GameScreen() {
+  const route = useRoute();
+  const navigation = useNavigation();
 
+  const { categoria, jogador } = route.params;
+  const emojis = categorias[categoria];
+
+  const [cards, setCards] = useState(shuffleArray(emojis));
+  const [flippedCards, setFlippedCards] = useState([]);
+  const [pontuacao, setPontuacao] = useState(0);
+
+  // Verificar combinação
   useEffect(() => {
     if (flippedCards.length === 2) {
       const [first, second] = flippedCards;
@@ -32,6 +41,9 @@ export default function App() {
               : card
           )
         );
+        setPontuacao(prev => prev + 10); // Acerto +10
+      } else {
+        setPontuacao(prev => prev - 1); // Erro -1
       }
 
       setTimeout(() => {
@@ -47,12 +59,14 @@ export default function App() {
     }
   }, [flippedCards]);
 
+  // Verificar fim do jogo
   useEffect(() => {
     if (cards.every(card => card.isMatched)) {
-      Alert.alert("Parabéns!", "Você encontrou todos os pares!");
+      atualizarPontuacaoNoBackend();
     }
   }, [cards]);
 
+  // Flip da carta
   const handlePress = (card) => {
     if (card.isFlipped || card.isMatched || flippedCards.length === 2) return;
 
@@ -63,11 +77,41 @@ export default function App() {
     setFlippedCards(prev => [...prev, flipped]);
   };
 
+  // Enviar pontuação para o backend
+  const atualizarPontuacaoNoBackend = async () => {
+    try {
+      await fetch(`http://${ip_address}:8000/atualizar_pontuacao`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          nome: jogador,
+          pontuacao: pontuacao
+        })
+      });
+
+      Alert.alert(
+        "Jogo Finalizado",
+        `Parabéns ${jogador.nome}, sua pontuação foi ${pontuacao} pontos!`,
+        [
+          { text: "Ver Ranking", onPress: () => navigation.navigate('RankingScreen') },
+          { text: "Voltar ao Início", onPress: () => navigation.navigate('HomeScreen') }
+        ]
+      );
+
+    } catch (error) {
+      console.error('Erro ao atualizar pontuação:', error);
+      Alert.alert("Erro", "Não foi possível atualizar sua pontuação.");
+    }
+  };
+
   return (
     <View style={styles.container}>
-
-
       <Text style={styles.title}>🧠 Jogo da Memória</Text>
+      <Text style={styles.subtitle}>Jogador: {jogador}</Text>
+      <Text style={styles.score}>Pontuação: {pontuacao}</Text>
+
       <View style={styles.centeredContent}>
         <FlatList
           data={cards}
@@ -88,27 +132,36 @@ export default function App() {
           )}
           contentContainerStyle={styles.flatListContent}
         />
-
       </View>
     </View>
   );
-
-
 }
+
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fdfada',
     alignItems: 'center',
-    justifyContent: 'flex-start', // deixa espaço para o título no topo
+    justifyContent: 'flex-start',
     paddingTop: 60,
   },
   title: {
     fontSize: 28,
     fontWeight: 'bold',
-    marginBottom: 20,
+    marginBottom: 4,
     color: '#444',
+  },
+  subtitle: {
+    fontSize: 18,
+    marginBottom: 8,
+    color: '#666'
+  },
+  score: {
+    fontSize: 20,
+    marginBottom: 16,
+    color: '#2563eb',
+    fontWeight: 'bold'
   },
   flatListContent: {
     flexGrow: 1,
